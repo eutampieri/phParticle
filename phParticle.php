@@ -14,7 +14,8 @@ class phParticle{
         }
         $url=$proto.$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
         $page=explode('/',$url);
-        return str_replace($page,'',$url);
+        $page=explode('/',$url);
+        return str_replace($page[count($page)-1],'',$url);
     }
     private function pageURL(){
         $proto;
@@ -46,7 +47,7 @@ class phParticle{
         $feed=$feed."\t\t<link rel=\"self\" href=\"".$this->pageURL()."\"/>\n";
         $feed=$feed."\t<icon>".$this->icon."</icon>\n";
         $feed=$feed."\t<updated>".$this->dt(time())."</updated>\n";
-        $feed=$feed."\t".'<generator uri="https://github.com/eutampieri/phParticle" version="0">phParticle</generator>'."\n";
+        $feed=$feed."\t".'<generator uri="https://github.com/eutampieri/phParticle" version="1">phParticle</generator>'."\n";
         $md=md5($_SERVER["SERVER_NAME"]);
         $crc=0;
         for($i=0;$i<strlen($md);$i++){
@@ -62,7 +63,7 @@ class phParticle{
             $feed=$feed."\t\t<author><name>".$articolo["author"]."</name></author>\n";
             $feed=$feed."\t\t<id>tag:".$_SERVER["SERVER_NAME"].",".strval(($crc%200)+1900).":article-".$articolo["date"]."</id>\n";
             $feed=$feed."\t\t<updated>".$this->dt($articolo["date"])."</updated>\n";
-            $feed=$feed."\t\t<summary type=\"html\">".htmlspecialchars($articolo["content"])."</summary>\n";
+            $feed=$feed."\t\t<summary type=\"html\">".htmlspecialchars($parser($articolo["content"]))."</summary>\n";
             $feed=$feed."\t</entry>\n";
         }
         $feed=$feed."</feed>\n";
